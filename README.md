@@ -27,7 +27,7 @@
 
 </div>
 
-> **Phouppo** *(n.)*: The paternal aunt in South Asian families who catches every imperfection before you even notice, and tells you straight up.
+> **Phouppo** *(n.)*: The infamous *character* in South Asian families who catches every imperfection before you even notice, and tells you straight up.
 >
 > *(The name is playful branding; Phouppo conducts audits with strict engineering objectivity and delivers professional, evidence-backed reports.)*
 
