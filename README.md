@@ -7,7 +7,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Cursor Skill](https://img.shields.io/badge/Cursor-Skill%20Compatible-000000?style=flat-square&logo=cursor&logoColor=white)](https://cursor.com)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-6B4FBB?style=flat-square&logo=anthropic&logoColor=white)](https://claude.ai/code)
-[![Standard](https://img.shields.io/badge/Standard-SKILL.md-FF6B6B?style=flat-square)](https://github.com/anthropics)
+[![Codex](https://img.shields.io/badge/Codex-Install%20Supported-10A37F?style=flat-square)](#option-5-codex)
+[![Antigravity](https://img.shields.io/badge/Antigravity-Install%20Supported-4285F4?style=flat-square)](#option-6-antigravity)
+[![Standard](https://img.shields.io/badge/Standard-SKILL.md-FF6B6B?style=flat-square)](https://agentskills.io)
 [![Safety: Read-Only](https://img.shields.io/badge/Safety-100%25%20Read--Only-2EA44F?style=flat-square)](#-safety-model)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
 
@@ -46,7 +48,7 @@ Apps generated with AI coding assistants ("vibe-coded" apps) often demo flawless
 └─────────────────────────────────┘      └──────────────────────────────────┘
 ```
 
-**Phouppo** steps in before real users do. Operating as an autonomous, read-only Agent Skill (supporting Cursor, Claude Code, and any agent implementing the `SKILL.md` specification), Phouppo evaluates your code like an ensemble of a **Principal Security Engineer**, **Systems Architect**, **Data Engineer**, and **Product Manager**.
+**Phouppo** steps in before real users do. Operating as an autonomous, read-only Agent Skill (supporting Cursor, Claude Code, Codex, Antigravity, and any agent implementing the `SKILL.md` specification), Phouppo evaluates your code like an ensemble of a **Principal Security Engineer**, **Systems Architect**, **Data Engineer**, and **Product Manager**.
 
 ---
 
@@ -89,15 +91,37 @@ flowchart LR
 
 ## <a id="installation"></a>📦 Installation
 
-Choose your agent environment below:
+Choose your agent environment below.
 
 ### Option 1: Via the Skills CLI *(Recommended)*
-Installs directly to your workspace with a single command:
+Installs for one or several agents with a single command:
 ```bash
+# One agent
 npx skills add SyedZeerak/phouppo -a cursor
+
+# Several agents at once
+npx skills add SyedZeerak/phouppo -a cursor -a claude-code -a codex -a antigravity
 ```
 
-### Option 2: Cursor
+### Option 2: Install script *(all agents, no extra tools)*
+Clone the repo, then run the installer from the repository root:
+```bash
+git clone https://github.com/SyedZeerak/phouppo.git
+cd phouppo
+
+bash install.sh                          # global install for all four agents
+bash install.sh --agents codex,antigravity
+bash install.sh --project                # install into the current project instead
+bash install.sh --link                   # symlink so repo updates apply automatically
+bash install.sh --uninstall
+```
+Windows (PowerShell):
+```powershell
+.\install.ps1
+.\install.ps1 -Scope project -Agents codex,antigravity
+```
+
+### Option 3: Cursor
 <details open>
 <summary><b>Project-level or Global installation</b></summary>
 
@@ -121,7 +145,7 @@ rm -rf phouppo
 > Cursor also recognizes skills in `.agents/skills/` and `.claude/skills/`. If the skill does not appear immediately, restart Cursor and check **Settings > Rules / Skills**.
 </details>
 
-### Option 3: Claude Code
+### Option 4: Claude Code
 <details>
 <summary><b>Claude Code installation</b></summary>
 
@@ -133,11 +157,60 @@ rm -rf phouppo
 ```
 </details>
 
+### <a id="option-5-codex"></a>Option 5: Codex
+<details>
+<summary><b>Codex installation</b></summary>
+
+Codex scans `.agents/skills` from your working directory up to the repository root, and `~/.agents/skills` for personal skills.
+
+**Global:**
+```bash
+git clone https://github.com/SyedZeerak/phouppo.git
+mkdir -p ~/.agents/skills
+cp -r phouppo/skills/phouppo ~/.agents/skills/
+rm -rf phouppo
+```
+
+**Project level:** copy the folder to `<your-project>/.agents/skills/phouppo` instead.
+
+Run `/skills` in Codex to confirm it is listed, and invoke it with `$phouppo`.
+</details>
+
+### <a id="option-6-antigravity"></a>Option 6: Antigravity
+<details>
+<summary><b>Antigravity installation</b></summary>
+
+**Global:**
+```bash
+git clone https://github.com/SyedZeerak/phouppo.git
+mkdir -p ~/.gemini/antigravity/skills
+cp -r phouppo/skills/phouppo ~/.gemini/antigravity/skills/
+rm -rf phouppo
+```
+
+**Project level:** copy the folder to `<your-project>/.agent/skills/phouppo` instead.
+
+> [!NOTE]
+> These locations follow the skills CLI conventions. Confirm them against your Antigravity version, and restart the agent if the skill does not appear.
+</details>
+
+### Invocation by agent
+
+| Agent | Command |
+|:---|:---|
+| Cursor | `/phouppo` |
+| Claude Code | `/phouppo` |
+| Codex | `$phouppo` |
+| Antigravity | Mention `phouppo` in chat, or use its skill picker |
+
+> [!NOTE]
+> The `disable-model-invocation` line in `SKILL.md` is honored by Cursor and Claude Code. Other agents may ignore it and select the skill automatically when a request matches.
+
 ---
 
 ## <a id="usage"></a>🚀 Usage & Options
 
-Invoke the skill directly within your agent chat window:
+Invoke the skill directly within your agent chat window (use `$phouppo` instead of `/phouppo` in Codex):
 
 ```bash
 # Standard audit on the entire repository (default)
@@ -177,7 +250,7 @@ The skill ships with `disable-model-invocation: true` to prevent accidental toke
 
 ## <a id="sample-report"></a>📋 Sample Report Preview
 
-Here is an excerpt of what Phouppo produces when auditing an application:
+Here is an excerpt of what Phouppo produces when auditing an application. The application and findings below are a fictional, illustrative example.
 
 ```markdown
 # Vibe Code Audit Report: Acme Logistics Portal
@@ -218,7 +291,7 @@ Phouppo is designed from the ground up to be safe to run against sensitive and p
 - **🙈 Secret Masking:** Detected tokens or API keys are automatically redacted (first 4 characters visible, followed by `****`).
 - **🛡️ Injection Resistant:** Treats all codebase strings, READMEs, and test fixtures as untrusted user input.
 - **🚫 Zero Unapproved Side Effects:** Never runs arbitrary shell commands, executes migrations, or triggers external network requests without explicit approval.
-- **🎯 Evidence or Silence:** If something cannot be verified conclusively from static code, it is marked `Not verified`—no hallucinated vulnerabilities.
+- **🎯 Evidence or Silence:** If something cannot be verified conclusively from static code, it is marked `Not verified`. No hallucinated vulnerabilities.
 
 ---
 
@@ -238,6 +311,9 @@ phouppo/
 ├── LICENSE                        # MIT License
 ├── CHANGELOG.md                   # Release history
 ├── CONTRIBUTING.md                # Contribution guidelines
+├── AGENTS.md                      # Fallback for agents without skill support
+├── install.sh                     # Installer (macOS / Linux)
+├── install.ps1                    # Installer (Windows PowerShell)
 └── skills/
     └── phouppo/
         ├── SKILL.md               # Main agent skill definition
@@ -290,4 +366,3 @@ Crafted with care by **Syed Wajdan Zeerak**
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Syed--Wajdan--Zeerak-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/Syed-Wajdan-Zeerak)
 
 </div>
-

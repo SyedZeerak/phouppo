@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-10-13
+
+### Added
+- Installation support for Codex and Antigravity (global and per-project).
+- `AGENTS.md`, `install.sh`, and `install.ps1` for flexible installation.
+- Cross-agent command mapping (`/phouppo` vs `$phouppo`).
+- Explicit mention of Codex and Antigravity in the README.
+
+### Changed
+- Installation instructions now list 6 options instead of 3.
+
 ## [1.1.0] - 2026-10-13
 
 ### Added
