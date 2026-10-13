@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Comprehensive secret and PII masking operating rule (`Mask secrets everywhere`) covering tokens, passwords (`[REDACTED]`), prefixes (`sk-****`, `AKIA****`), emails, and phone numbers across all report sections and snippets.
+- Pre-output redaction pass rule verifying draft against leaked secrets, connection strings, personal emails, cloud project IDs, internal hostnames/URLs, and local system paths.
+- Repository-relative path and unique finding ID operating guidelines.
+- Severity calibration rule: down-rate finding when exploitability depends on unverified deployment facts, noting escalation conditions.
+- Explicit readiness rubric definitions for "Not ready", "Ready with conditions", and "Ready".
+
 ## [1.2.0] - 2026-10-13
 
 ### Added
