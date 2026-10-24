@@ -5,7 +5,7 @@ This repository contains the Phouppo audit skill. Agents that support the Agent 
 If your agent does not support skills, read `skills/phouppo/SKILL.md` and follow it as the task instructions when the user asks for an audit of a vibe-coded or AI-generated web app. Load files from `skills/phouppo/references/` only when `SKILL.md` directs you to.
 
 Rules that always apply:
-- The audit is read-only. Do not modify the audited repository.
+- The audit is read-only. Do not modify the audited application's code. Deliver the report as an interactive visual Markdown (`.md`) artifact (written to the agent's artifact panel or `audit-report.md`).
 - Do not run the app, tests, or scanners without explicit user approval.
 - Cite `path:line` evidence for every finding, or mark it "Not verified".
 - Mask any secret found in output.
