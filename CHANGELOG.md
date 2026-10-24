@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-24
+
+### Added
+- Interactive visual Markdown (`.md`) artifact report structure in `skills/phouppo/references/report-template.md` featuring Mermaid diagrams (severity breakdown and remediation roadmap), high-contrast status pills, and production readiness alert banners (`> [!CAUTION]`, `> [!WARNING]`, `> [!NOTE]`).
+- Interactive collapsible finding accordions (`<details open>` for Critical and High findings, `<details>` for Medium, Low, and Info) with structured property tables, impact callouts, and syntax-highlighted code snippets.
+- Interactive remediation punch-list task checklists (`- [ ]`) organized by priority (Before Go-Live, Within 30 Days, Backlog).
+- Collapsible secondary diagnostic traces for the 10-point triage results and dynamic probe logs.
+- High-resolution hero banner asset (`assets/phouppo-hero.png`) and animated interactive terminal simulation SVG (`assets/phouppo-demo.svg`) embedded in documentation.
+
+### Changed
+- Updated skill operating rules (`SKILL.md` and `AGENTS.md`) and Phase 3 workflow to deliver audits as dedicated interactive visual `.md` artifacts (written to the agent artifact panel or `audit-report.md`) accompanied by a concise executive summary in chat.
+- Streamlined `README.md` header badges to standard compact shields for Cursor, Claude Code, Codex, and Antigravity.
+
+## [1.3.0] - 2026-10-13
+
 ### Added
 - Comprehensive secret and PII masking operating rule (`Mask secrets everywhere`) covering tokens, passwords (`[REDACTED]`), prefixes (`sk-****`, `AKIA****`), emails, and phone numbers across all report sections and snippets.
 - Pre-output redaction pass rule verifying draft against leaked secrets, connection strings, personal emails, cloud project IDs, internal hostnames/URLs, and local system paths.
@@ -34,7 +49,6 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Changed
 - Operating rule on side effects is now mode-aware.
-
 
 ## [1.0.0] - 2026-10-13
 

@@ -4,17 +4,20 @@
 
 ### *A read-only audit skill for vibe-coded apps. She notices everything.*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
-[![Cursor Skill](https://img.shields.io/badge/Cursor-Skill%20Compatible-000000?style=flat-square&logo=cursor&logoColor=white)](https://cursor.com)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-6B4FBB?style=flat-square&logo=anthropic&logoColor=white)](https://claude.ai/code)
-[![Codex](https://img.shields.io/badge/Codex-Install%20Supported-10A37F?style=flat-square)](#option-5-codex)
-[![Antigravity](https://img.shields.io/badge/Antigravity-Install%20Supported-4285F4?style=flat-square)](#option-6-antigravity)
-[![Standard](https://img.shields.io/badge/Standard-SKILL.md-FF6B6B?style=flat-square)](https://agentskills.io)
-[![Safety: Read-Only](https://img.shields.io/badge/Safety-100%25%20Read--Only-2EA44F?style=flat-square)](#-safety-model)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Cursor](https://img.shields.io/badge/Cursor-ready-black)](https://cursor.com)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-ready-6B4FBB)](https://claude.ai/code)
+[![Codex](https://img.shields.io/badge/Codex-ready-10A37F)](#option-5-codex)
+[![Antigravity](https://img.shields.io/badge/Antigravity-ready-4285F4)](#option-6-antigravity)
+[![Safety](https://img.shields.io/badge/safety-100%25_read--only-2EA44F)](#-safety-model)
+
+<br/><br/>
+
+![Phouppo Hero Banner](assets/phouppo-hero.png)
 
 <p align="center">
   <a href="#why-phouppo">Why Phouppo</a> •
+  <a href="#see-it-in-action">Live Demo</a> •
   <a href="#what-it-covers">Coverage</a> •
   <a href="#how-it-works">How It Works</a> •
   <a href="#installation">Installation</a> •
@@ -37,18 +40,22 @@
 
 Apps generated with AI coding assistants ("vibe-coded" apps) often demo flawlessly and sail through the happy path on day one. But behind the polished UI, they routinely harbor invisible landmines:
 
-```
-┌─────────────────────────────────┐      ┌──────────────────────────────────┐
-│     The AI Demo (Day 1)         │      │     The Reality (Day 30)         │
-├─────────────────────────────────┤      ├──────────────────────────────────┤
-│  ✨ Slick shadcn/ui components   │  VS  │  🚨 IDOR: unauthenticated data   │
-│  ✨ Responsive dashboards       │      │  🚨 Floats used for currency     │
-│  ✨ Instant Supabase integration│      │  🚨 RLS disabled (USING true)    │
-│  ✨ Seamless OAuth flow         │      │  🚨 Hardcoded test credentials   │
-└─────────────────────────────────┘      └──────────────────────────────────┘
-```
+| ✨ The AI Demo *(Day 1)* | 🚨 The Reality *(Day 30)* |
+|:---|:---|
+| 🎨 **Slick shadcn/ui components** & sleek dark mode | 🔓 **IDOR Vulnerabilities**: Unscoped route parameters leak cross-tenant data |
+| ⚡ **Instant Supabase / Firebase integration** | 💥 **RLS Disabled**: Supabase policies set to `USING (true)` or missing |
+| 💳 **Functional checkout & billing demo** | 💸 **Silent Float Drift**: IEEE 754 floating-point math causes billing errors |
+| 🔐 **Seamless OAuth flow & tokens** | 🔑 **Hardcoded Secrets**: Developer tokens and `.env` keys baked into client bundles |
 
-**Phouppo** steps in before real users do. Operating as an autonomous, read-only Agent Skill (supporting Cursor, Claude Code, Codex, Antigravity, and any agent implementing the `SKILL.md` specification), Phouppo evaluates your code like an ensemble of a **Principal Security Engineer**, **Systems Architect**, **Data Engineer**, and **Product Manager**.
+**Phouppo** steps in before real users do. Operating as an autonomous, read-only Agent Skill (compatible with Cursor, Claude Code, Codex, Antigravity, and any agent implementing the `SKILL.md` specification), Phouppo evaluates your code like an ensemble of a **Principal Security Engineer**, **Systems Architect**, **Data Engineer**, and **Product Manager**.
+
+---
+
+## <a id="see-it-in-action"></a>🎬 See Phouppo in Action
+
+Phouppo outputs a high-level executive summary in chat and compiles a comprehensive, **interactive visual Markdown (`.md`) artifact** with collapsible findings and Mermaid diagrams:
+
+![Phouppo Interactive Audit Terminal & Artifact Demo](assets/phouppo-demo.svg)
 
 ---
 
@@ -79,13 +86,13 @@ Phouppo utilizes **progressive disclosure** to stay ultra-fast and consume minim
 flowchart LR
     A[🔍 Phase 0<br/><b>Reconnaissance</b><br/><i>Detect stack & env</i>] --> B[⚡ Phase 1<br/><b>10-Point Triage</b><br/><i>Pass / Fail / Partial</i>]
     B --> C[🔬 Phase 2<br/><b>Targeted Deep Dive</b><br/><i>Load specific modules</i>]
-    C --> D[📑 Phase 3<br/><b>Evidence Report</b><br/><i>path:line citations</i>]
+    C --> D[📑 Phase 3<br/><b>Interactive Artifact</b><br/><i>Visual .md report</i>]
 ```
 
 1. **Reconnaissance:** Fast scan of runtime, framework, database, authentication provider, and third-party integrations (completed in under 10 tool calls).
 2. **10-Point Triage:** Executes high-leverage grep/regex checks across top failure modes. Marks each as `Pass`, `Fail`, `Partial`, or `Not verified`.
 3. **Targeted Deep Dive:** Dynamically loads reference modules (`references/*.md`) *only* for areas flagged during triage or explicitly requested.
-4. **Actionable Report:** Outputs an executive summary for stakeholders alongside line-by-line developer remediation steps.
+4. **Actionable Interactive Report:** Delivers the full audit as an interactive visual Markdown (`.md`) artifact featuring Mermaid charts, collapsible finding cards (`<details><summary>`), visual status pills, and punch-list checklists, accompanied by an executive summary in chat.
 
 ---
 
@@ -196,15 +203,12 @@ rm -rf phouppo
 
 ### Invocation by agent
 
-| Agent | Command |
-|:---|:---|
-| Cursor | `/phouppo` |
-| Claude Code | `/phouppo` |
-| Codex | `$phouppo` |
-| Antigravity | Mention `phouppo` in chat, or use its skill picker |
-
-> [!NOTE]
-> The `disable-model-invocation` line in `SKILL.md` is honored by Cursor and Claude Code. Other agents may ignore it and select the skill automatically when a request matches.
+| Agent | Command | Output Style |
+|:---|:---|:---|
+| **Cursor** | `/phouppo` | Interactive `.md` file & chat |
+| **Claude Code** | `/phouppo` | Interactive `.md` file & chat |
+| **Codex** | `$phouppo` | Interactive `.md` file & chat |
+| **Antigravity** | Mention `phouppo` in chat | Native side-pane artifact panel & chat |
 
 ---
 
@@ -238,47 +242,69 @@ Invoke the skill directly within your agent chat window (use `$phouppo` instead 
 | | `standard` *(default)* | Adds Phase 2 deep-dive modules for areas flagged during triage. |
 | | `deep` | Executes thorough deep-dive reviews across all 10 domains. |
 | `--focus` | `comma-separated` | Limits Phase 2 to specific areas: `security`, `architecture`, `code-quality`, `visual`, `data`, `devops`, `testing`, `llm`, `product`, `docs`. |
+| `--mode` | `static` *(default)* | Read files only without side effects. |
+| | `tools` | Runs existing test suites and read-only linters after explicit confirmation. |
+| | `dynamic` | Boots app locally in sandbox to probe endpoints after explicit confirmation. |
 
 > [!TIP]
-> Want the audit saved to disk? Simply append your instruction:
-> *"Run `/phouppo --depth standard` and save the report to `audit-report.md`."*
-
-### Automatic Triggering
-The skill ships with `disable-model-invocation: true` to prevent accidental token usage. If you want your agent to automatically recommend Phouppo during code reviews or before pull requests, remove that line from [SKILL.md](skills/phouppo/SKILL.md).
+> The audit is automatically delivered as an interactive visual Markdown (`.md`) artifact—rendered in your agent's artifact panel (e.g. Antigravity) or written to `audit-report.md`.
 
 ---
 
 ## <a id="sample-report"></a>📋 Sample Report Preview
 
-Here is an excerpt of what Phouppo produces when auditing an application. The application and findings below are a fictional, illustrative example.
+Here is an excerpt of what Phouppo produces when auditing an application. The findings below demonstrate the interactive accordion formatting and visual status badges:
 
 ```markdown
-# Vibe Code Audit Report: Acme Logistics Portal
+# 🧐 Vibe Code Audit Report: Acme Logistics Portal
 Date: 2026-10-13 | Scope: apps/portal | Depth: standard
 
 ## 1. Executive Summary
-- Overall Readiness: **Not ready for production**
-- Primary Risk: Any authenticated driver can access distributor payout spreadsheets via IDOR.
-- Required Action: Patch 2 critical authorization checks and enable RLS policies prior to launch (~1 day effort).
 
-## 2. Scorecard
-| Area | Rating | Key Reason |
-|:---|:---|:---|
-| Security | 🔴 Critical | Unrestricted ID parameter in payout route |
-| Data & Calculations | 🟠 High | Float arithmetic used for currency totals |
-| Code Quality | 🟡 Medium | Swallowed promise rejections in queue consumer |
-| Visual Design | 🟢 Good | Clean token usage; WCAG AA contrast maintained |
+> [!CAUTION]
+> ### 🛑 Overall Readiness: NOT READY FOR PRODUCTION
+> **2 Critical** and **1 High** severity issues must be resolved before go-live.
 
-## 3. Findings
+- **Primary Risk**: Any authenticated driver can access distributor payout spreadsheets via IDOR.
+- **Go-Live Requirements**: Patch 2 authorization checks and enable RLS policies prior to launch (~1 day effort).
 
-### [SEC-01] IDOR in Distributor Payout Route
-- Severity: Critical | Exploitability: High
-- Location: `apps/portal/api/payouts/[id].ts:42`
-- Evidence:
-  const payout = await db.payouts.findUnique({ where: { id: req.query.id } });
-  return res.json(payout);
-- Risk: Route verifies session token but does not check whether req.user.orgId owns payout.
-- Remediation: Scope query to tenant: { id: req.query.id, orgId: req.user.orgId }.
+## 2. Visual Scorecard
+| Domain | Rating | Open Issues | Key Reason |
+|:---|:---:|:---:|:---|
+| 🛡️ Security | 🔴 Critical | 2 | Unrestricted ID parameter in payout route |
+| 🗄️ Data Integrity | 🟠 High | 1 | Float arithmetic used for currency totals |
+| 💻 Code Quality | 🟡 Medium | 1 | Swallowed promise rejections in queue consumer |
+| 🎨 Visual Design | 🟢 Good | 0 | Clean token usage; WCAG AA contrast maintained |
+
+## 3. Interactive Findings
+
+<details open>
+<summary>🔴 <b>[SEC-01] IDOR in Distributor Payout Route</b> &mdash; <code>Critical</code> &bull; <code>Effort: S</code></summary>
+
+| Property | Value |
+|:---|:---|
+| **Area** | Security |
+| **Location** | `apps/portal/api/payouts/[id].ts:42` |
+| **Confidence** | High |
+| **Verified** | Static |
+
+> [!CAUTION]
+> **Impact**: Unauthenticated tenant data leakage across distributor organizations.
+
+**Evidence:**
+```typescript
+const payout = await db.payouts.findUnique({ where: { id: req.query.id } });
+return res.json(payout);
+```
+
+**Recommendation:**
+Scope query to tenant: `{ id: req.query.id, organizationId: req.user.organizationId }`.
+
+</details>
+
+## 4. Remediation Checklist
+- [ ] **[SEC-01]** Scope payout query to authenticated tenant `organizationId` (apps/portal/api/payouts/[id].ts:42)
+- [ ] **[DAT-01]** Migrate invoice totals to integer cents / decimal.js (lib/billing/calculator.ts:88)
 ```
 
 ---
@@ -287,7 +313,7 @@ Date: 2026-10-13 | Scope: apps/portal | Depth: standard
 
 Phouppo is designed from the ground up to be safe to run against sensitive and proprietary codebases:
 
-- **🔒 100% Read-Only:** Phouppo inspects code, but never edits, commits, or mutates repository files.
+- **🔒 100% Read-Only:** Phouppo inspects code, but never edits, commits, or mutates your application's source files. Reports are delivered as interactive `.md` artifacts.
 - **🙈 Secret Masking:** Detected tokens or API keys are automatically redacted (first 4 characters visible, followed by `****`).
 - **🛡️ Injection Resistant:** Treats all codebase strings, READMEs, and test fixtures as untrusted user input.
 - **🚫 Zero Unapproved Side Effects:** Never runs arbitrary shell commands, executes migrations, or triggers external network requests without explicit approval.
@@ -307,6 +333,9 @@ Phouppo works seamlessly alongside other agent skills:
 
 ```
 phouppo/
+├── assets/
+│   ├── phouppo-hero.jpg           # High-resolution hero banner
+│   └── phouppo-demo.svg           # Animated interactive audit terminal
 ├── README.md                      # Documentation & Quickstart
 ├── LICENSE                        # MIT License
 ├── CHANGELOG.md                   # Release history

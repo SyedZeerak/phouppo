@@ -25,7 +25,7 @@ If the user gives no arguments, run `standard` on the repository root.
 
 ## Operating rules
 
-1. **Read-only.** Never modify, delete, or create files in the audited repository. Write the report to `audit-report.md` only if the user asks for a file; otherwise reply in chat.
+1. **Read-only codebase & interactive artifact delivery.** Never modify, delete, or create application source files in the audited repository. Deliver the complete audit report as an interactive visual Markdown (`.md`) artifact (written to the agent's artifact panel where supported, or to `audit-report.md`). In chat, provide an executive summary, readiness verdict, and scorecard pointing to the interactive artifact.
 2. **Evidence or silence.** Every finding cites `path:line` and quotes the minimal relevant snippet. If something cannot be verified from the repository, label it `Not verified` and state what is needed to verify it. Never infer a vulnerability from the absence of code you have not searched for.
 3. **No generic advice.** Do not list best practices that have no bearing on this repository.
 4. **Mask secrets everywhere.** Never output a full credential, token, key, password, or connection string in any part of the report: findings, tables, triage evidence, and code snippets. When quoting a line that contains one, replace the value before writing it. For keys with a known prefix show only the prefix (`sk-****`, `AKIA****`). For passwords and other secrets write `[REDACTED]` and show no characters. Mask personal email addresses and phone numbers the same way. Recommend rotation instead of reproducing the value.
@@ -86,9 +86,12 @@ For `visual`, review statically from stylesheets, theme and token files, compone
 ### Phase 2b: Verification (only if --mode tools or dynamic)
 Load `references/dynamic-testing.md`. Follow its preflight, consent, and stop conditions. Use results to confirm or refute static findings. Mark a finding `Verified: Test` only if a test demonstrated it.
 
-### Phase 3: Report
+### Phase 3: Interactive Artifact Report
 
-Load `references/report-template.md` and follow it exactly. Order findings by severity, then by exploitability. Open with an executive summary written in plain language for non-technical readers (plant operations, sales, finance, management): what is at risk, in business terms, and what must happen before go-live.
+Load `references/report-template.md` and generate the audit report as an interactive visual Markdown (`.md`) artifact:
+- **Visual presentation**: Include the readiness callout banner (`> [!CAUTION]`, `> [!WARNING]`, or `> [!NOTE]`), domain scorecard with visual status badges, Mermaid severity distribution and remediation roadmap diagrams, and interactive remediation task checklists (`- [ ]`).
+- **Interactive accordions**: Format findings as collapsible `<details>` blocks (`<details open>` for Critical and High findings; `<details>` for Medium, Low, and Info). Place 10-point triage results and dynamic probe logs inside collapsible `<details>` sections.
+- **Delivery**: Save the full interactive report to the agent's artifact system (e.g. Antigravity artifact panel) or write to `audit-report.md`. In chat, provide a concise Executive Summary and readiness scorecard that links to the interactive artifact.
 
 ## Severity rubric
 
@@ -104,17 +107,31 @@ Load `references/report-template.md` and follow it exactly. Order findings by se
 
 ## Finding format
 
+Findings are authored as interactive accordion cards (use `<details open>` for Critical and High findings, `<details>` for Medium, Low, and Info):
+
+```markdown
+<details open>
+<summary>🔴 <b>[ID] Title</b> &mdash; <code>Critical | High | Medium | Low | Info</code> &bull; <code>Effort: S | M | L</code></summary>
+
+| Property | Value |
+|:---|:---|
+| **Area** | security | architecture | ... |
+| **Location** | `path/to/file.ext:LINE` |
+| **Confidence** | High | Medium | Low |
+| **Verified** | Static | Test |
+
+> [!CAUTION] <!-- Use [!CAUTION] for Critical, [!WARNING] for High, [!NOTE] for Medium/Low -->
+> **Impact**: what can go wrong, in business terms
+
+**Evidence:**
+```<language>
+// minimal snippet proving the finding
 ```
-### [ID] Title
-Severity: Critical | High | Medium | Low | Info
-Area: security | architecture | ...
-Location: path/to/file.ext:LINE
-Evidence: minimal snippet or observation
-Impact: what can go wrong, in business terms
-Recommendation: concrete fix
-Effort: S (under 1 hour) | M (under 1 day) | L (over 1 day)
-Confidence: High | Medium | Low
-Verified: Static | Test
+
+**Recommendation:**
+concrete fix
+
+</details>
 ```
 
 ## Efficiency guidelines
