@@ -36,12 +36,12 @@ Apps generated with AI coding assistants ("vibe-coded" apps) often demo flawless
 
 | ✨ The AI Demo *(Day 1)* | 🚨 The Reality *(Day 30)* |
 |:---|:---|
-| 🎨 **Slick shadcn/ui components** & sleek dark mode | 🔓 **IDOR Vulnerabilities**: Unscoped route parameters leak cross-tenant data |
-| ⚡ **Instant Supabase / Firebase integration** | 💥 **RLS Disabled**: Supabase policies set to `USING (true)` or missing |
-| 💳 **Functional checkout & billing demo** | 💸 **Silent Float Drift**: IEEE 754 floating-point math causes billing errors |
+| 🎨 **Slick shadcn/ui components** & sleek dark mode | 🔓 **IDOR & TOCTOU Vulnerabilities**: Unscoped route parameters & check-then-act races leak or corrupt tenant data |
+| ⚡ **Instant Supabase / Firebase integration** | 💥 **RLS Disabled**: Supabase policies set to `USING (true)` or trusting user-editable `user_metadata` |
+| 💳 **Functional checkout & billing demo** | 💸 **Silent Float Drift & Lost Updates**: IEEE 754 floating-point math & non-atomic writes corrupt ledgers |
 | 🔐 **Seamless OAuth flow & tokens** | 🔑 **Hardcoded Secrets**: Developer tokens and `.env` keys baked into client bundles |
 
-**Phouppo** steps in before real users do. Operating as an autonomous, read-only Agent Skill (compatible with Cursor, Claude Code, Codex, Antigravity, and any agent implementing the `SKILL.md` specification), Phouppo evaluates your code like an ensemble of a **Principal Security Engineer**, **Systems Architect**, **Data Engineer**, and **Product Manager**.
+**Phouppo** steps in before real users do. Operating as an autonomous, read-only Agent Skill (compatible with Cursor, Claude Code, Codex, Antigravity, and any agent implementing the `SKILL.md` specification), Phouppo evaluates your code like an ensemble of a **Principal Security Engineer**, **Systems Architect**, **Database Engineer**, **Performance Specialist**, **HCI / UX Psychologist**, and **Product Manager**.
 
 ---
 
@@ -59,20 +59,20 @@ Phouppo outputs a high-level executive summary in chat and compiles a comprehens
 <a id="what-it-covers"></a>
 ## 🎯 What It Covers
 
-Phouppo inspects 10 critical domains, providing structured evaluation with zero generic fluff:
+Phouppo inspects 10 critical domains grounded in **100+ years of computer science, systems engineering, database theory, cybersecurity, and Human-Computer Interaction (HCI) laws**, providing structured evaluation with zero generic fluff:
 
-| Domain | Focus & Key Checkpoints |
-|:---|:---|
-| 🛡️ **Security** | Secret leakage (`sk-`, `AKIA`, JWTs), server-side authorization & IDOR, Supabase/Firebase RLS policies, SQL/XSS/Command injection, file upload guards, security headers, dependency poisoning. |
-| 🏛️ **Architecture** | Component boundaries, DRY business logic, API consistency, rate limits, scale bottlenecks, graceful degradation, and multi-tenancy isolation. |
-| 💻 **Code Quality** | Swallowed errors (`catch {}`), frontend boundary states (empty, loading, offline), async race conditions, accessibility, and phantom/mocked features disguised as real. |
-| 🎨 **Visual Design & UI** | Consistency of tokens and typography, WCAG AA color contrast, responsive layout breaks, chart states, RTL & Urdu layout fidelity, and recognizable "AI UI tells". |
-| 🗄️ **Data Engineering** | Migration history, relational integrity, missing foreign keys, floating-point math on currencies, backup & restore plans, and CSV/file import validation. |
-| 🚀 **DevOps & Reliability** | Environment variable management, lockfile discipline, CI/CD pipeline health, edge/serverless timeouts, observability (logging/metrics), and bus-factor risk. |
-| 🧪 **Testing** | Critical-path coverage, negative edge-case test suites, auth regression tests, and acceptance test validity. |
-| 🤖 **LLM Risks** | Indirect prompt injection, system prompt leakage, unbounded agent tool permissions, and API budget runaway vulnerabilities. |
-| 📋 **Product & Governance** | Problem-solution alignment, user workflow drop-offs, administrative ownership, and regulatory/privacy disclosures. |
-| 📚 **Documentation** | Handover package completeness, incident runbooks, disaster recovery steps, and service access matrix. |
+| Domain | Foundational Laws & Pioneers | Focus & Key Checkpoints |
+|:---|:---|:---|
+| 🛡️ **Security** | *Saltzer & Schroeder (1975), Kerckhoffs, LangSec, Moxie's Cryptographic Doom Principle, OWASP* | Secret leakage (`sk-`, `AKIA`, JWTs), Complete Mediation & BOLA/BFLA/BOPLA, TOCTOU race conditions, AEAD & CSPRNG crypto hygiene, Supabase/Firebase RLS policies, SQL/XSS/SSRF/Prototype Pollution, file upload & SVG guards, supply-chain slopsquatting. |
+| 🏛️ **Architecture** | *Parnas Information Hiding, Lampson, Brooks, Ousterhout Deep Modules, Amdahl's & Little's Laws ($L=\lambda W$)* | Conceptual integrity across prompting sessions, deep vs. shallow modules, Amdahl's serial request waterfalls, Little's Law connection pool saturation, transactional outbox vs. dual-write traps, cache stampedes, and multi-tenant blast-radius isolation. |
+| 💻 **Code Quality & Speed** | *Hoare Logic, Parse Don't Validate, Harel Statecharts, Carmack Simplicity, RAIL & Core Web Vitals* | Swallowed errors (`catch {}`), finite state machines vs. "boolean soup", frontend boundary states, LCP ($<2.5\text{s}$), INP ($<200\text{ms}$), CLS ($<0.1$), list virtualization, `AbortController` / listener memory leaks, and phantom/mocked features. |
+| 🎨 **Visual Design, HCI & Psychology** | *Fitts's, Hick's, Miller's, Jakob's & Tesler's Laws, Sweller Cognitive Load, Norman, Gestalt, Poka-Yoke, Doherty ($<400\text{ms}$), Tufte* | Design token discipline, Weber-Fechner typographic hierarchy, WCAG 2.2 AA contrast, Fitts's Law touch ergonomics ($\ge 44\text{px}$), Poka-Yoke mistake-proofing, Doherty Threshold feedback, Peak-End & Zeigarnik flows, Tufte chart integrity, RTL/Urdu Nastaliq fidelity, and AI UI tells. |
+| 🗄️ **Data Engineering** | *Codd Normal Forms (3NF/BCNF), Gray ACID, Berenson/Kleppmann MVCC Anomalies, Stonebraker* | Declarative constraints, lost updates & write skew under MVCC, B+Tree leftmost-prefix & query sargability, unindexed foreign keys, cursor/keyset vs. `OFFSET` pagination, expand-and-contract zero-downtime migrations, double-entry ledger integrity, and IEEE 754 float traps. |
+| 🚀 **DevOps & SRE** | *Twelve-Factor App, Google SRE (SLIs/SLOs), Brendan Gregg USE Method, Tom Wilkie RED Method* | Boot-time env validation, lockfile & container hardening, `SIGTERM` graceful shutdown, `/healthz` vs. `/readyz` separation, correlation IDs, paid-API spend circuit breakers, PITR backups, and institutional bus-factor ownership. |
+| 🧪 **Testing** | *Dijkstra's Maxim, Kent Beck Test Desiderata, Boundary Value Analysis, QuickCheck Property Testing* | Detection of AI tautological tests (mocking the unit under test), golden-case financial matrices, slab boundary value analysis, cross-tenant authorization matrices, and deterministic clock/state isolation. |
+| 🤖 **LLM & Agent Risks** | *Simon Willison's Lethal Trifecta, OWASP LLM Top 10, CaMeL Privilege Separation* | Direct & indirect prompt injection, Markdown image exfiltration, deterministic session binding on agent tools, human-in-the-loop (HITL) gates, RAG vector pre-filtering by tenant, and Denial-of-Wallet token bounds. |
+| 📋 **Product & Governance** | *Christensen Jobs-to-be-Done (JTBD), Suchman Cognitive Ergonomics, Cavoukian Privacy by Design* | End-to-end operational workflow completeness (exceptions, reversals, overrides), field-device and shared-tablet ergonomics, data minimization, and stakeholder sign-off. |
+| 📚 **Documentation** | *Knuth Literate Systems, Nygard ADRs, Diátaxis Framework* | Reproducible quickstart, Architecture Decision Records (ADRs), day-2 operational runbooks (rollback, restore, key rotation), data dictionary, and institutional access matrix. |
 
 ---
 
@@ -372,18 +372,18 @@ phouppo/
     └── phouppo/
         ├── SKILL.md               # Main agent skill definition
         └── references/            # Modular deep-dive checklists
-            ├── security.md        # Auth, IDOR, RLS, injection
-            ├── architecture.md    # Multi-tenancy, API & structure
-            ├── code-quality.md    # Error handling, race conditions
-            ├── visual-design.md   # Design tokens, contrast, layout
-            ├── data-engineering.md# Schema, migrations, math accuracy
-            ├── devops.md          # CI/CD, envs, observability
-            ├── testing.md         # Critical coverage, test quality
-            ├── llm-risks.md       # Prompt injection, token runaway
-            ├── product-governance.md # Feature fit, ownership
-            ├── documentation.md   # Handover package, runbooks
-            ├── stack-notes.md     # Framework-specific cheat sheets
-            └── report-template.md # Standardized report schema
+            ├── security.md        # Saltzer & Schroeder, LangSec, Auth, BOLA, TOCTOU
+            ├── architecture.md    # Parnas, Lampson, Amdahl & Little's Laws, DDIA
+            ├── code-quality.md    # Hoare Logic, Statecharts, RAIL & Core Web Vitals
+            ├── visual-design.md   # Fitts, Hick, Sweller, Norman, Gestalt, Poka-Yoke, Doherty
+            ├── data-engineering.md# Codd 3NF, Gray ACID, MVCC anomalies, B+Tree sargability
+            ├── devops.md          # Twelve-Factor, Google SRE, Gregg USE & Wilkie RED
+            ├── testing.md         # Dijkstra, Beck, BVA, QuickCheck, AI tautology checks
+            ├── llm-risks.md       # Willison's Lethal Trifecta, OWASP LLM Top 10, RAG
+            ├── product-governance.md # JTBD, Cognitive Ergonomics, Privacy by Design
+            ├── documentation.md   # Nygard ADRs, Diátaxis, Runbooks, Handover package
+            ├── stack-notes.md     # Framework & ORM cheat sheets
+            └── report-template.md # Standardized interactive report schema
 ```
 
 ---

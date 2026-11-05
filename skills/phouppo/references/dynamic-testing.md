@@ -24,13 +24,14 @@ Run only read-only tools that exist on the machine. If one is missing, mark the 
 
 ## Dynamic mode (--mode dynamic)
 Includes tools mode. Start the app locally with approved commands, then probe.
-1. **Authorization:** create two test users (and one per role). As user A, request user B's resources by changing IDs, and call admin endpoints as a normal user. Record request and response status.
-2. **Calculations:** run user-supplied golden cases (inputs with expected outputs from the written policy). Report every mismatch.
-3. **Input handling:** a small set of malformed and oversized inputs on forms and APIs. No heavy fuzzing or load.
-4. **Sessions:** expired or tampered tokens, logout invalidation.
-5. **Headers and cookies:** read from real responses (CSP, HSTS, cookie flags, CORS).
-6. **Errors:** confirm no stack traces or SQL errors reach the client.
-7. **Visual:** if a browser tool exists, screenshots at about 360, 768, and 1280 px, in each theme, plus a contrast and accessibility scan.
+1. **Authorization & Complete Mediation:** create two test users (and one per role/tenant). As user A, request user B's resources by changing IDs (BOLA/IDOR), send extra privileged fields in body payloads (BOPLA/mass assignment), and call admin endpoints as a normal user (BFLA). Record request and response status.
+2. **Concurrency & TOCTOU probes:** fire 2–5 parallel requests against state-transition, coupon, or balance-deduction endpoints in the local sandbox to verify atomic locking and idempotency.
+3. **Calculations:** run user-supplied golden cases (inputs with expected outputs from the written policy, including zero, negative, and slab boundaries). Report every mismatch.
+4. **Boundary parsing & input handling:** a small set of malformed, unexpected-type, and oversized inputs on forms and APIs. No heavy fuzzing or load.
+5. **Sessions:** expired or tampered tokens, logout invalidation, and session fixation check.
+6. **Headers and cookies:** read from real responses (CSP, HSTS, cookie flags, CORS reflection).
+7. **Errors:** confirm no stack traces, raw Prisma/SQL errors, or internal paths reach the client.
+8. **Visual, CWV & HCI:** if a browser tool exists, inspect at about 360, 768, and 1280 px in each theme, measure LCP/CLS/INP and response latency against the 400ms Doherty Threshold, verify touch target sizes ($\ge 44\text{px}$), and run an accessibility/contrast scan.
 
 ## Stop conditions
 Stop and report immediately if: a production system is detected, real personal data, or any breach of the consent plan. Return to static mode and explain what happened.

